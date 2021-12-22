@@ -1,6 +1,6 @@
 var express = require('express')
   , passport = require('passport')
-  , LinkedinStrategy = require('../lib').Strategy;
+  , LinkedinStrategy = require('./lib').Strategy;
 
 // API Access link for creating client ID and secret:
 // https://www.linkedin.com/secure/developer

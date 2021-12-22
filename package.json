@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "mocha -t 5000",
-    "start": "cd example && node server.js"
+    "start": "node server.js"
   },
   "devDependencies": {
     "ejs": "^2.6.1",
