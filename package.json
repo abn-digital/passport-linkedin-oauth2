@@ -8,7 +8,8 @@
     "url": "https://github.com/auth0/passport-linkedin-oauth2"
   },
   "scripts": {
-    "test": "mocha -t 5000"
+    "test": "mocha -t 5000",
+    "start": "node server.js"
   },
   "devDependencies": {
     "ejs": "^2.6.1",
