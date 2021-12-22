@@ -6,7 +6,7 @@ var express = require('express')
 // https://www.linkedin.com/secure/developer
 var LINKEDIN_CLIENT_ID = process.env.LINKEDIN_CLIENT_ID;
 var LINKEDIN_CLIENT_SECRET = process.env.LINKEDIN_CLIENT_SECRET;
-var CALLBACK_URL = process.env.CALLBACK_URL || 'http://localhost:3000/auth/linkedin/callback';
+var CALLBACK_URL = process.env.CALLBACK_URL || 'https://oauth.abndigital.com.ar/auth/linkedin/callback';
 
 
 // Passport session setup.
@@ -33,8 +33,9 @@ passport.use(new LinkedinStrategy({
     clientID:     LINKEDIN_CLIENT_ID,
     clientSecret: LINKEDIN_CLIENT_SECRET,
     callbackURL:  CALLBACK_URL,
-    scope:        ['r_liteprofile', 'r_emailaddress'],
-    passReqToCallback: true
+    scope:        ['r_ads_reporting','r_basicprofile','r_organization_social','rw_ads','rw_organization_admin'],
+    passReqToCallback: true,
+    state:true
   },
   function(req, accessToken, refreshToken, profile, done) {
     // asynchronous verification, for effect...
@@ -61,7 +62,7 @@ app.use(express.logger());
 app.use(express.cookieParser());
 app.use(express.urlencoded());
 app.use(express.json());
-app.use(express.session({ secret: 'keyboard cat' }));
+app.use(express.session({ secret: 'HcEFx4rbDFBXHM9P' }));
 // Initialize Passport!  Also use passport.session() middleware, to support
 // persistent login sessions (recommended).
 app.use(passport.initialize());
@@ -84,7 +85,7 @@ app.get('/account', ensureAuthenticated, function(req, res){
 //   redirecting the user to linkedin.com.  After authorization, Linkedin
 //   will redirect the user back to this application at /auth/linkedin/callback
 app.get('/auth/linkedin',
-  passport.authenticate('linkedin', { state: 'SOME STATE' }),
+  passport.authenticate('linkedin'),
   function(req, res){
     // The request will be redirected to Linkedin for authentication, so this
     // function will not be called.
@@ -98,6 +99,8 @@ app.get('/auth/linkedin',
 app.get('/auth/linkedin/callback',
   passport.authenticate('linkedin', { failureRedirect: '/login' }),
   function(req, res) {
+    console.log(req)
+    console.log(res)
     res.redirect('/');
   });
 
