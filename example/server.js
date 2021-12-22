@@ -7,7 +7,7 @@ var express = require('express')
 var LINKEDIN_CLIENT_ID = process.env.LINKEDIN_CLIENT_ID;
 var LINKEDIN_CLIENT_SECRET = process.env.LINKEDIN_CLIENT_SECRET;
 var CALLBACK_URL = process.env.CALLBACK_URL || 'https://oauth.abndigital.com.ar/auth/linkedin/callback';
-
+var PORT = process.env.PORT || 8080;
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
@@ -111,7 +111,9 @@ app.get('/logout', function(req, res){
 
 var http = require('http');
 
-http.createServer(app).listen(3000);
+http.createServer(app).listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}...`);
+});
 
 
 // Simple route middleware to ensure user is authenticated.
