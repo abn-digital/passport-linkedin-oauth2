@@ -1,6 +1,9 @@
 var express = require('express')
   , passport = require('passport')
   , LinkedinStrategy = require('./lib').Strategy;
+var levelup = require('levelup')
+var leveldown = require('leveldown')
+var DATABASE = levelup(leveldown('./tokenDatabase'))
 
 // API Access link for creating client ID and secret:
 // https://www.linkedin.com/secure/developer
@@ -8,6 +11,8 @@ var LINKEDIN_CLIENT_ID = process.env.LINKEDIN_CLIENT_ID;
 var LINKEDIN_CLIENT_SECRET = process.env.LINKEDIN_CLIENT_SECRET;
 var CALLBACK_URL = process.env.CALLBACK_URL || 'https://oauth.abndigital.com.ar/auth/linkedin/callback';
 var PORT = process.env.PORT || 8080;
+var REQUESTED_LINKEDIN_SCOPES = ['r_ads_reporting','r_basicprofile','r_organization_social','rw_ads','rw_organization_admin']
+var TEST_REQUESTED_LINKEDIN_SCOPES = ['r_ads_reporting','r_basicprofile','r_organization_social','rw_ads']
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
@@ -33,7 +38,7 @@ passport.use(new LinkedinStrategy({
     clientID:     LINKEDIN_CLIENT_ID,
     clientSecret: LINKEDIN_CLIENT_SECRET,
     callbackURL:  CALLBACK_URL,
-    scope:        ['r_ads_reporting','r_basicprofile','r_organization_social','rw_ads','rw_organization_admin'],
+    scope: TEST_REQUESTED_LINKEDIN_SCOPES,
     passReqToCallback: true,
     state:true
   },
@@ -72,8 +77,7 @@ app.use(express.static(__dirname + '/public'));
 
 
 app.get('/', function(req, res){
-  res.send('Hello from App Engine!');
-  //res.render('index', { user: req.user });
+  res.render('index', { user: req.user });
 });
 
 app.get('/account', ensureAuthenticated, function(req, res){
@@ -100,9 +104,14 @@ app.get('/auth/linkedin',
 app.get('/auth/linkedin/callback',
   passport.authenticate('linkedin', { failureRedirect: '/login' }),
   function(req, res) {
-    console.log(req)
-    console.log(res)
-    res.redirect('/');
+    console.log(req.user.id)
+    console.log(req.user.displayName)
+    console.log(req.session.accessToken)
+    DATABASE.put(req.user.id, {
+      "linkedInId": req.user.id,
+      "displayName": req.user.displayName,
+      "token": req.session.accessToken
+    })
   });
 
 app.get('/logout', function(req, res){

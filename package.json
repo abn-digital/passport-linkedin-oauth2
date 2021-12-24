@@ -35,6 +35,8 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "leveldown": "^6.1.0",
+    "levelup": "^5.1.1",
     "passport-oauth2": "1.x.x"
   },
   "directories": {
