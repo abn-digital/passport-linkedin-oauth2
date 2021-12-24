@@ -10,6 +10,7 @@ var DATABASE = levelup(leveldown('./tokenDatabase'))
 var LINKEDIN_CLIENT_ID = process.env.LINKEDIN_CLIENT_ID;
 var LINKEDIN_CLIENT_SECRET = process.env.LINKEDIN_CLIENT_SECRET;
 var CALLBACK_URL = process.env.CALLBACK_URL || 'https://oauth.abndigital.com.ar/auth/linkedin/callback';
+var ROBOTS_TRABAJANDO_PARA_TI = "https://abndigital.com.ar/en/auth-linkedin/"
 var PORT = process.env.PORT || 8080;
 var REQUESTED_LINKEDIN_SCOPES = ['r_ads_reporting','r_basicprofile','r_organization_social','rw_ads','rw_organization_admin']
 var TEST_REQUESTED_LINKEDIN_SCOPES = ['r_ads_reporting','r_basicprofile','r_organization_social','rw_ads']
@@ -38,7 +39,7 @@ passport.use(new LinkedinStrategy({
     clientID:     LINKEDIN_CLIENT_ID,
     clientSecret: LINKEDIN_CLIENT_SECRET,
     callbackURL:  CALLBACK_URL,
-    scope: TEST_REQUESTED_LINKEDIN_SCOPES,
+    scope: REQUESTED_LINKEDIN_SCOPES,
     passReqToCallback: true,
     state:true
   },
@@ -104,14 +105,13 @@ app.get('/auth/linkedin',
 app.get('/auth/linkedin/callback',
   passport.authenticate('linkedin', { failureRedirect: '/login' }),
   function(req, res) {
-    console.log(req.user.id)
-    console.log(req.user.displayName)
-    console.log(req.session.accessToken)
-    DATABASE.put(req.user.id, {
+    console.log("Saving token to database and redirecting user to landing page")
+    DATABASE.put(req.user.id, JSON.stringify({
       "linkedInId": req.user.id,
       "displayName": req.user.displayName,
       "token": req.session.accessToken
-    })
+    }))
+    res.redirect(ROBOTS_TRABAJANDO_PARA_TI);
   });
 
 app.get('/logout', function(req, res){
