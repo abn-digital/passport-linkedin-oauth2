@@ -1,6 +1,6 @@
 <% if (!user) { %>
-	<h2>Welcome! Please log in.</h2>
-	<a href="/auth/linkedin">Login with Linkedin</a>
+	<h2>Bienvenido! Para poder darnos acceso tenés que logearte primero con LinkedIn.</h2>
+	<a href="/auth/linkedin">Linkedin Login</a>
 <% } else { %>
-	<h2>Hello, <%= user.displayName %>. Our robots are already working for you!</h2>
+	<h2>Hola! <%= user.displayName %>. Nuestro robotitos ya están trabajando para vos!</h2>
 <% } %>
