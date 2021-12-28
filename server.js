@@ -15,9 +15,6 @@ var PORT = process.env.PORT || 8080;
 var REQUESTED_LINKEDIN_SCOPES = ['r_ads_reporting','r_basicprofile','r_organization_social','rw_ads','rw_organization_admin']
 var TEST_REQUESTED_LINKEDIN_SCOPES = ['r_ads_reporting','r_basicprofile','r_organization_social','rw_ads']
 
-console.log("Initating with client ID ", LINKEDIN_CLIENT_ID)
-console.log("Initating with client SECRET ", LINKEDIN_CLIENT_SECRET)
-
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
 //   serialize users into and deserialize users out of the session.  Typically,
@@ -126,7 +123,6 @@ app.get('/logout', function(req, res){
 var http = require('http');
 
 http.createServer(app).listen(PORT, () => {
-  console.log('Se ejecutaron los cambios')
   console.log(`Server listening on port ${PORT}...`);
 });
 
